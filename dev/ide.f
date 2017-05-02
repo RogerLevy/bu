@@ -1,3 +1,4 @@
+\ early IDE experimenet
 empty
 
 bu: idiom ide:
@@ -22,7 +23,7 @@ _public
 
 \ Values
 0 value 'go     \ game
-0 value 'show   \ game
+0 value 'render   \ game
 0 value 'step   \ game
 
 \ Flags
@@ -192,9 +193,9 @@ create console-personality
 
 \ : ?show
 \   pause @ if
-\     'show @ ?call
+\     'render @ ?call
 \   else
-\     lag @ -exit  update? -exit  'show @ ?call  0 lag !
+\     lag @ -exit  update? -exit  'render @ ?call  0 lag !
 \   then ;
 
 : /baseline
@@ -224,7 +225,7 @@ create console-personality
 
 : ide-step  step  ?clearkb  'step ?call ;
 : ide-events  thru? if  'go ?call  then  idekeys ;
-: game  framed  'show ?call ;
+: game  framed  'render ?call ;
 : ide-show  show  cls  game  ui ;
 
 : big  ( display #1280 #960 al_resize_display drop ) fs on  allowwin off  ?fs ;
@@ -241,9 +242,9 @@ bu:  ide-words +order
 \ redefine all the things; note these 'go and friends are redefined over the piston's.
 : ok  ;
 : go    r> to 'go ;
-: show  r> to 'show ;
+: show  r> to 'render ;
 : step  r> to 'step ;
-: empty  empty  ide: /ide   0 to 'go   0 to 'show   0 to 'step ;
+: empty  empty  ide: /ide   0 to 'go   0 to 'render   0 to 'step ;
 
 
 gild
