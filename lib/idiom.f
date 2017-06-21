@@ -1,4 +1,4 @@
-\ better namespacing system
+\ Idioms - a better namespacing system
 
 \ idioms have:
 \  a parent idiom
@@ -8,8 +8,8 @@
 
 \ important words:
 \   `idiom` <name>
-\     creates a new idiom.  has different behavior depending on
-\     if currently importing the current file.  if not importing, it creates a
+\     creates a new idiom in the FORTH wordlist.  has different behavior depending
+\     on if currently importing the current file.  if not importing, it creates a
 \     new idiom, extending the current one (whatever it might be) so that that
 \     idiom is included in the new one's search order, except for its private
 \     words.  if importing, and the idiom is not already defined, it creates
@@ -19,16 +19,16 @@
 \     being interpreted is cancelled.
 \     the default "current" wordlist for defining words is the idiom's public
 \     one.
-\  `include` is extended to save and restore `idiom`, the current idiom.
-\  `import` saves and restores `idiom` as well as a flag that `create-idiom`
+\     when executed, an idiom replaces the search order and current wordlist.
+\  `include` is extended to save and restore `'idiom`, the current idiom.
+\  `import` saves and restores `'idiom` as well as a flag that `create-idiom`
 \     uses to change its behavior.
-\  `.idiom` prints info about the current idiom.  usually, idioms set the
-\     search order themselves when executed.
+\  `.idiom` prints info about the current idiom.  
 \  `set-idiom` takes an idiom and sets the search order (it replaces it.)
 \     the default "current" wordlist for defining words is the idiom's public
 \     one.
 \  `breadth` the value that stores the maximum # of accesory idioms the next
-\     idiom can have.
+\     idiom can have.  (later it will be a linked list so this will become obsolete)
 \  `public:` - set current wordlist for defining to current idiom's "publics"
 \  `private:` - set current wordlist for defining to current idiom's "privates"
 
@@ -38,10 +38,10 @@
 \  Enter:
 \    Call the name of an idiom.  Its public and private words, predecessor's public words,
 \    and imported public words, will be available.  This is the search order from first to last.
-\      1) Idiom's publics
-\      2) Idiom's privates
+\      1) Idiom's privates
+\      2) Idiom's publics 
 \      3) Imported idioms' publics
-\      4) Predecessor idiom's publics
+\      4) Predecessor idiom's publics and imports
 \  Public/Private:
 \    Call `PUBLIC:` and `PRIVATE:` to switch between defining public and private words of the current
 \    idiom.  Private words won't be available to any other idiom, unless you explicitly export them.
@@ -54,29 +54,39 @@
 \  Inherit:
 \    Declare or enter an idiom.
 \    `INCLUDE` file that declares child idiom
-\    This new idiom will "know" the public words of all of its predecessors.
+\    This new idiom will "know" the public words of all of its predecessors and their accessories,
+\    in the order declared and imported.  (see above)
 \  Extend:
-\    `INCLUDE` a file that declares an idiom that already exists in the current search order.
-\     or
-\    `INCLUDE` a file that at the top simply enters the idiom you want to extend.
+\    `INCLUDE` a file that enters an idiom that already exists, or simply enter the idiom and start
+\    adding definitions.
+\    There is no one-idiom-per-file restriction like in other namespace systems.  You can spread
+\    them across files.  (You could even declare multiple ones per file, but that could get confusing,
+\    and it's not recommended to create idioms non-discriminantly.  Unlike Forth words, with idioms,
+\    slice, don't dice.)
 \  Import:
 \    `IMPORT` a file that declares an idiom.  If it's already defined in the current search order, it
-\    will simply be imported, and the rest of the file will be skipped.
-\  Isolate:
-\    In a file, enter any "predecessor" idiom (or say `GLOBAL`) and then declare/extend an idiom.
-\    If you `IMPORT` this file, it will be imported into the current idiom in the importing file.
-\    If you `INCLUDE` this file, it will NOT be imported.
-\    In both cases, the name of the isolated idiom will only be available in its parent.
-\    Therefore, it can only be imported by "related" idioms.
+\    will simply be imported into the current idiom, and the rest of the file will be skipped.
+\  Attach:
+\    You can have a parent or importer automatically import one or more accessories that may or may 
+\    not be imported by the idiom you're defining.  This is called an attachment.
+\    Just IMPORT another idiom before declaring:
+\       IMPORT <attached>  \ will be imported into the current idiom at this point (either the importer,
+\                          \ some unrelated idiom, or the parent.)
+\       <parent>: IDIOM <child>
 \  Encapsulate:
-\    The idioms imported by an idiom, and its parents, are NOT imported along with it
-\    when impored into another idiom.  Only its public words.
+\    The idioms imported by an idiom, its privates, and its predecessors, are NOT imported along with it
+\    when imported into another idiom.  Only its public words.
+\    Similarly, privates are not inherited.
 \  Export:
 \    The private or public wordlists of the current idiom can be given names that can
 \    be automatically defined within the parent idiom or the Forth wordlist.
 \    Use `@publics | @privates EXPORT-WORDLIST <name>  \ naming convention:  <idiomname>ing`
 \    If for whatever reason both wordlists are desired, export the @privates and import or
 \    extend the idiom.
+\  Mixin:
+\    Use `MIXIN` instead of `IDIOM`
+\    A special kind of idiom that can be loaded multiple times even if you're importing it.
+\    Also they are not restricted to the global (FORTH) namespace.
 
 
 \ : wl  wordlist create , does> @ ;  \ enables us to see idiom names with ORDER
@@ -186,9 +196,7 @@ defer /only
 
 \ Mixins:
 \ like regular idioms only it doesn't early-out if already defined.
-\ you cannot extend existing idioms this way.
 \ mixins are not forced to be global either.
-\ typically you don't have to call a parent idiom because you want to be able to compile the mixin anywhere.
 : mixin  ( -- <name:> )
   /only  create  (idiom)  does>  set-idiom  public: ;
 
