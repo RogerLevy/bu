@@ -15,7 +15,8 @@ s" preamble" .notice
 \ "O" Register
 0 value o
 &of o constant &o
-: for>  ( val addr -- )  r>  -rot  dup dup >r @ >r  !  call  r> r> ! ;
+: (with>)  r>  -rot  dup dup >r @ >r  !  call  r> r> ! ;
+: with>  ( val addr -- )  state @ if  postpone (with>)  else  !  then  ; immediate
 
 : reverse   ( ... count -- ... ) 1+ 1 max 1 ?do i 1- roll loop ;
 

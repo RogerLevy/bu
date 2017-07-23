@@ -23,7 +23,7 @@ private:
 
 public: : /cbox /cbox ;
 
-: cbox!  ( x y w h cbox -- )  &o for>  2over 2+  #1 #1 2-  o x2 2v!  o x1 2v! ;
+: cbox!  ( x y w h cbox -- )  &o with>  2over 2+  #1 #1 2-  o x2 2v!  o x1 2v! ;
 : cbox@  ( cbox -- x y w h ) dup >r x1 2v@ r> x2 2v@  2over 2-  #1 #1 2+ ;
 : 4@  ( cbox -- x1 y1 x2 y2 ) dup 2v@ rot cell+ cell+ 2v@ ;
 
@@ -81,7 +81,7 @@ private:
     2dup >r  4@  r> 4@   overlap? ;
 
   0 value cnt
-  : checkSector  ( cbox1 sector -- flag )
+  : check-sector  ( cbox1 sector -- flag )
     0 to cnt
     swap true locals| flag cbox1 |
     begin ( sector ) @ ( link|0 ) dup flag and while
@@ -97,8 +97,8 @@ private:
     flag
     ;
 
-  : ?checkSector  ( cbox1 sector|0 -- flag )  \ check a cbox against a sector
-    dup if  checkSector  else  nip  then ;
+  : ?check-sector  ( cbox1 sector|0 -- flag )  \ check a cbox against a sector
+    dup if  check-sector  else  nip  then ;
 
   : ?corner  ( x y -- 0 | sector )  \ see what sector the given coords are in & cull already checked corners
     sector
@@ -110,14 +110,14 @@ private:
 
 public:
 
-: resetGrid ( cgrid -- )
+: reset-cgrid ( cgrid -- )
   to cgrid
   sectors @ cols 2v@ * ierase
   links @ i.link ! ;
 
-: addCbox  ( cbox cgrid -- )
+: add-cbox  ( cbox cgrid -- )
   to cgrid
-  ( box ) &o for>  lastsector off  lastsector2 off
+  ( box ) &o with>  lastsector off  lastsector2 off
   o x1 2v@       ?corner ?dup if  dup o s1 !  o swap link  else  o s1 off  then
   o x2 @ o y1 @  ?corner ?dup if  dup o s2 !  o swap link  else  o s2 off  then
   o x1 @ o y2 @  ?corner ?dup if  dup o s4 !  o swap link  else  o s4 off  then
@@ -126,31 +126,31 @@ public:
 
 \ perform collision checks.  assumes box has already been added to the cgrid.
 \   this avoids unnecessary work for the CPU.
-: checkGrid  ( cbox1 xt cgrid -- )  \ xt is the response; see COLLIDE
+: check-cgrid  ( cbox1 xt cgrid -- )  \ xt is the response; see COLLIDE
   to cgrid  is collide
-  &o for>
-  o dup s1 @ ?checkSector -exit
-  o dup s2 @ ?checkSector -exit
-  o dup s3 @ ?checkSector -exit
-  o dup s4 @ ?checkSector drop ;
+  &o with>
+  o dup s1 @ ?check-sector -exit
+  o dup s2 @ ?check-sector -exit
+  o dup s3 @ ?check-sector -exit
+  o dup s4 @ ?check-sector drop ;
 
 \ this doesn't require the box to be added to the cgrid
-: checkCbox  ( cbox1 xt cgrid -- )  \ xt is the response; see COLLIDE
+: check-cbox  ( cbox1 xt cgrid -- )  \ xt is the response; see COLLIDE
   to cgrid  is collide
-  &o for>  lastsector off lastsector2 off
-    o dup x1 2v@       ?corner  ?checkSector -exit
-    o dup x2 @ o y1 @  ?corner  ?checkSector -exit
-    o dup x1 @ o y2 @  ?corner  ?checkSector -exit
-    o dup x2 2v@       ?corner  ?checkSector drop ;
+  &o with>  lastsector off lastsector2 off
+    o dup x1 2v@       ?corner  ?check-sector -exit
+    o dup x2 @ o y1 @  ?corner  ?check-sector -exit
+    o dup x1 @ o y2 @  ?corner  ?check-sector -exit
+    o dup x2 2v@       ?corner  ?check-sector drop ;
 
 : >#sectdims  sectw 1 - secth 1 - 2+  sectw secth 2/  2pfloor ;
 
-: collisionGrid  ( maxboxes width height -- <name> )
+: cgrid  ( maxboxes width height -- <name> )
   create  /cgrid allotment  to cgrid
   >#sectdims
   2dup cols 2v!  here sectors !  ( cols rows ) * cells /allot
                  here links !    ( maxboxes )  4 * 2 cells * /allot ;
 
-: cgridSize  ( cgrid -- w h )
+: cgrid-size  ( cgrid -- w h )
   to cgrid  cols 2v@  sectw secth 2* ;
 
