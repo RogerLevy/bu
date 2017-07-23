@@ -22,8 +22,6 @@ create fore 4 cells allot
 : *bmp   ( w h -- bmp ) 2i al_create_bitmap ;
 : clearbmp  ( r g b a bmp )  onto 4af al_clear_to_color ;
 : backbuf  display al_get_backbuffer ;
-: loadbmp  zstring al_load_bitmap ;
-: savebmp  push zstring pop al_save_bitmap ;
 \ : *subbmp   ( bmp w h ) at@ 2i 2swap 2i al_create_sub_bitmap ;
 : backdrop  color@af al_clear_to_color ;
 
@@ -32,20 +30,21 @@ fixed
 : 8>p  s>f 255e f/ f>p ;
 : createcolor create 8>p swap 8>p rot 8>p , , , 1 ,  does> 4@ color ;
 hex
-00 00 00 createcolor black 40 40 40 createcolor dgrey
-80 80 80 createcolor grey b0 b0 b0 createcolor lgrey
+00 00 00 createcolor black 69 71 75 createcolor dgrey
+9d 9d 9d createcolor grey cc cc cc createcolor lgrey
 ff ff ff createcolor white f8 e0 a0 createcolor beige
-ff 80 ff createcolor pink ff 00 00 createcolor red
-80 00 00 createcolor dkred ff 80 00 createcolor orange
-80 40 00 createcolor brown ff ff 00 createcolor yellow
-80 80 00 createcolor dyellow 80 ff 00 createcolor neon
-00 ff 00 createcolor green 00 80 00 createcolor dgreen
-00 ff ff createcolor cyan 00 80 80 createcolor dcyan
-00 00 ff createcolor blue 00 00 80 createcolor dblue
-80 80 ff createcolor lblue 80 00 ff createcolor violet
-40 00 80 createcolor dviolet ff 00 ff createcolor magenta
+e0 68 fb createcolor pink ce 26 33 createcolor red
+73 29 30 createcolor dred  eb 89 31 createcolor lbrown
+a4 64 22 createcolor brown f7 e2 5b createcolor yellow
+bc b3 30 createcolor dyellow ae 3c 27 createcolor lgreen
+44 89 1a createcolor green 21 5c 2e createcolor dgreen
+27 c1 a7 createcolor cyan 14 80 7e createcolor dcyan
+24 5a ef createcolor blue 34 2a 97 createcolor dblue
+31 a2 f2 createcolor lblue 93 73 eb createcolor purple
+96 4b a8 createcolor dpurple cb 5c cf createcolor magenta
 80 00 80 createcolor dmagenta ff ff 80 createcolor lyellow
-e0 e0 80 createcolor khaki
+e0 e0 80 createcolor khaki f7 b0 80 createcolor caucasian
+da 42 00 createcolor orange
 fixed
 
 \ Bitmap drawing utilities - f stands for flipped

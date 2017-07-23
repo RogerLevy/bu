@@ -1,5 +1,7 @@
 \ [ ] overflow checking
-bu: idiom stack:
+
+bu: idiom cellstack:
+
 : cellstack  ( max-size -- <name> )  create 0 , cells /allot ;
 : @length  @ ;
 : vacate  0 swap ! ;
@@ -8,3 +10,5 @@ bu: idiom stack:
 : []  ( n stack -- addr )  swap 1 + cells + ;
 : pushes  ( ... stack n -- ) swap locals| s |  0 ?do  s push  loop ;
 : pops    ( stack n -- ... ) swap locals| s |  0 ?do  s pop  loop ;
+: splace  ( addr count stack -- ) 2dup !  cell u+  swap imove ;
+: scount  dup @   cell u+ ;

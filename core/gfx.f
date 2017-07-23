@@ -24,3 +24,6 @@ decimal
     2 constant FLIP_V
     3 constant FLIP_HV
 fixed
+
+: loadbmp  zstring al_load_bitmap ;
+: savebmp  zstring al_save_bitmap ;
