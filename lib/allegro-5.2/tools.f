@@ -1,2 +1,2 @@
-create e   32 cells /allot  \ internal
-: etype   e ALLEGRO_EVENT_TYPE-type @ ;  \ internal
+create evt   32 cells /allot  \ internal
+: etype   evt ALLEGRO_EVENT_TYPE-type @ ;  \ internal

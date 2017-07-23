@@ -66,11 +66,11 @@ ide:
 : rub       cmdbuf c@  #-1 +  0 max  cmdbuf c! ;
 : paste     clipb cmdbuf append ;
 : ?paused  pause @ if  -timer  0 +to lag   else  +timer  then ;
-: keycode  e ALLEGRO_KEYBOARD_EVENT-keycode @ ;
-: unichar  e ALLEGRO_KEYBOARD_EVENT-unichar @ ;
+: keycode  evt ALLEGRO_KEYBOARD_EVENT-keycode @ ;
+: unichar  evt ALLEGRO_KEYBOARD_EVENT-unichar @ ;
 private:
-  : ctrl?  e ALLEGRO_KEYBOARD_EVENT-modifiers @ ALLEGRO_KEYMOD_CTRL and ;
-  : alt?  e ALLEGRO_KEYBOARD_EVENT-modifiers @ ALLEGRO_KEYMOD_ALT and ;
+  : ctrl?  evt ALLEGRO_KEYBOARD_EVENT-modifiers @ ALLEGRO_KEYMOD_CTRL and ;
+  : alt?  evt ALLEGRO_KEYBOARD_EVENT-modifiers @ ALLEGRO_KEYMOD_ALT and ;
 public:
 : /margins 0 0 displayw displayh 3 rows - margins !xywh ;
 : 4@af  4@ 4af ;

@@ -44,7 +44,7 @@ create fse  /ALLEGRO_ANY_EVENT /allot  \ fullscreen event
     : try  dup -exit call 0 ;
 [then]
 
-\ : alt?  e ALLEGRO_KEYBOARD_EVENT-modifiers @ ALLEGRO_KEYMOD_ALT and ;
+\ : alt?  evt ALLEGRO_KEYBOARD_EVENT-modifiers @ ALLEGRO_KEYMOD_ALT and ;
 : std
   etype ALLEGRO_EVENT_DISPLAY_RESIZE = if
     -timer  display al_acknowledge_resize  +timer  \ we have to turn off the timer to avoid a race condition
@@ -54,7 +54,7 @@ create fse  /ALLEGRO_ANY_EVENT /allot  \ fullscreen event
   etype ALLEGRO_EVENT_DISPLAY_SWITCH_IN = if  clearkb  +timer   +audio  false to alt?  then
   etype ALLEGRO_EVENT_DISPLAY_CLOSE = if  0 ExitProcess  then
   etype ALLEGRO_EVENT_KEY_DOWN = if
-    e ALLEGRO_KEYBOARD_EVENT-keycode @ case
+    evt ALLEGRO_KEYBOARD_EVENT-keycode @ case
       <alt>    of  true to alt?  endof
       <altgr>  of  true to alt?  endof
       <enter>  of  alt? -exit  fs toggle  endof
@@ -65,7 +65,7 @@ create fse  /ALLEGRO_ANY_EVENT /allot  \ fullscreen event
     endcase
   then
   etype ALLEGRO_EVENT_KEY_UP = if
-    e ALLEGRO_KEYBOARD_EVENT-keycode @ case
+    evt ALLEGRO_KEYBOARD_EVENT-keycode @ case
       <alt>    of  false to alt?  endof
       <altgr>  of  false to alt?  endof
     endcase
@@ -97,7 +97,7 @@ defer ?system   ' noop is ?system   \ system events
 : step  'step try to steperr ;
 private:
     : update?  timer? if  lag dup -exit drop  then  eventq al_is_event_queue_empty  lag 4 >= or ;
-    : wait  eventq e al_wait_for_event ;
+    : wait  eventq evt al_wait_for_event ;
     : ?render  update? -exit  1 +to #frames  ?fs  render  unmount  ?overlay  al_flip_display
         0 to lag ;
     : ?step  etype ALLEGRO_EVENT_TIMER = if  1 +to lag   poll  step  then ;
@@ -115,7 +115,7 @@ public:
         wait
         begin
             std  ?system  'go try drop  ?step  ?render
-            eventq e al_get_next_event 0=  breaking? or
+            eventq evt al_get_next_event 0=  breaking? or
         until  ?render  \ again for sans timer
     breaking? until
     ok/ ;
