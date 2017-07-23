@@ -1,6 +1,6 @@
-\ OOP for Bubble by Roger Levy
+\ OOP for Bubble
 
-\ classes support rudimentary static vars.  static var values are inherited.
+\ classes support rudimentary static vars and prototypes.  static var values are inherited.
 \  to add and assign static vars,
 \    <superclass> INHERIT
 \      xvar foo  123 p foo !  \ init prototype the short way
