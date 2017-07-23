@@ -1,18 +1,28 @@
 \ better XML handling.
 \ only read words for now (7/17/2016)
 
-global
-idiom [xml]
+bu: idiom xml:
+    import bu/mo/cellstack
 
-dom-create dom
+
+16 cellstack doms
+0 value dom
 
 decimal
+
+0 value xn  \ xml node
+&of xn constant &xn
+
+: open>  " &of xn with>" evaluate ; immediate
 
 \ the node in here is different from the one defined in nodes.f
 : >root ( dom -- node )  dom>iter nni-root ;
 : >next ( node -- node|0 )  nnn>dnn dnn-next@ ;
-: done  dom dom-(free) ;
-: xml  ( adr c -- root-node )  done  true dom dom-read-string 0= throw  dom >root ;
+: done  dom dom-free  doms pop to dom ;
+: xml  ( adr c -- root-node )
+    dom doms push
+    dom-new to dom
+    true dom dom-read-string 0= throw  dom >root ;
 : #children  ( node -- n )  nnn>children dnl>length @ ;
 : @name  ( node -- adr c )  dom>node>name str-get ;
 : @val  ( node -- adr c )  dom>node>value str-get ;
@@ -33,7 +43,7 @@ decimal
 : .attributes  ( node -- )  ['] (.attributes) scan ;
 : .element  ( node -- )  dup .name dup .attributes .elements ;
 : name=  third @name compare 0= ;
-: ?el ( node adr c n -- node true | false )
+: ?el[] ( node adr c n -- node true | false )
     locals| n c adr |
     >first  begin  dup while
         dup element? if
@@ -42,7 +52,7 @@ decimal
         then
         >next
     repeat ;
-: el  ( node adr c n -- node )  ?el 0= abort" child element not found" ;
+: el[]  ( node adr c n -- node )  ?el[] 0= abort" child element not found" ;
 : eachel  ( node adr c xt -- )  ( ... node -- ... )
     XT >r  to XT
     2>r
@@ -54,18 +64,26 @@ decimal
     repeat
     2r> 2drop
     r> to XT ;
-: (?attr)  ( O=node adr c -- node|false )
+: eachel>  r> code> eachel ;
+
+: (?attr)  ( xn=node adr c -- node|false )
     locals| c adr |
-    O >first  begin  dup while
+    xn >first  begin  dup while
         dup @type dom.attribute = if  adr c name= ?exit then
         >next
     repeat ;
-\ the following use the O register for the input node, to cut down on stack juggling.
-: ?attr$  ( adr c -- adr c true | false )  (?attr) dup if @val true then ;
-: ?attr  ( adr c -- node true | false )  (?attr) dup if @val evaluate true then ;
-: attr ( adr c -- n )  ?attr 0= abort" attribute not found" ;
-: attr$ ( adr c -- adr c )  ?attr$ 0= abort" attribute not found" ;
 
-\ : text ( node -- adr c ) ;
+\ the following use the xn register for the input node, to cut down on stack juggling.
+: ?attr$  ( xn=node adr c -- adr c true | false )  (?attr) dup if @val true then ;
+: ?attr  ( xn=node adr c -- n true | false )  (?attr) dup if @val evaluate true then ;
+: attr ( xn=node adr c -- n )  ?attr 0= abort" attribute not found" ;
+: attr$ ( xn=node adr c -- adr c )  ?attr$ 0= abort" attribute not found" ;
 
+: $=  compare 0= ;
 
+: strattr   create   parse-word string,  does>  count  attr$ ;
+: numattr   create   parse-word string,  does>  count  attr ;
+: attrchecker create parse-word string,  does>  count  (?attr) ;
+: childnode create   parse-word string,  does>  ( node n ) count rot el[] ;
+
+: .xn  cr xn .element ;
