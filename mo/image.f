@@ -12,14 +12,14 @@ struct /image
   create /image allotment <filespec> zstring al_load_bitmap swap initImage ;
 
 \ dimensions
-: imgW  bmp @ bmpw ;
-: imgH  bmp @ bmph ;
-: imgwh  dup imgW swap imgH ;
+: imgw  bmp @ bmpw ;
+: imgh  bmp @ bmph ;
+: imgwh  bmp @ bmpwh ;
 
 \ ------------------------------ subimg stuff -------------------------------
 : subdivide  ( tilew tileh img -- )
   >r  2dup r@ subw 2v!  2af r@ fsubw 2v!
-  r@ imgwh r@ subw 2v@ 2/ 2pfloor  2dup r@ subcols 2v!
+  r@ imgwh  r@ subw 2v@  2/ 2pfloor  2dup r@ subcols 2v!
   *  r> subcount ! ;
 
 : >subxy  ( n img -- x y )                                                    \ locate a subimg by index
