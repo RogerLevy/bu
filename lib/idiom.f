@@ -6,6 +6,9 @@
 \  a private wordlist
 \  a public wordlist
 
+\ WARNING: Don't import an idiom into its parent!  It currently causes
+\  a corrupted dictionary. :( (7/24)
+
 \ important words:
 \   `idiom` <name>
 \     creates a new idiom in the FORTH wordlist.  has different behavior depending
