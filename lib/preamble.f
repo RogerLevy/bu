@@ -21,7 +21,7 @@ s" preamble" .notice
 : reverse   ( ... count -- ... ) 1+ 1 max 1 ?do i 1- roll loop ;
 
 \ Idioms
-: included  sp@ >r  included  r> sp@ cell- <> ?dup if  .s abort" STACK DEPTH CHANGED" then ;
+: included  sp@ >r  included  r> sp@ cell- <> if  .s  true abort" STACK DEPTH CHANGED"  then ;
 include bu/lib/idiom
   
 \ ffl DOM
