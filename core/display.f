@@ -37,6 +37,7 @@ create ues  32 cells /allot  \ user event source
     al_init_acodec_addon not if  " Allegro: Couldn't initialize audio codec addon." alert -1 abort  then
     al_install_audio not if  " Allegro: Couldn't initialize audio." alert -1 abort  then
     +audio
+    \ mixer al_get_default_voice al_attach_mixer_to_voice drop
 ;
 
 : assertAllegro
