@@ -44,7 +44,6 @@ variable output   \ output bitmap
 
 bu:
 create margins  0 , 0 , 0 , 0 ,   \ margins for the command history. (rectangle)
-variable interact   \ if on, cmdline will receive keys.  check if false before doing game input, if needed.
 ide:
 
 \ --------------------------------------------------------------------------------------------------

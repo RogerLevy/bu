@@ -24,6 +24,7 @@
 variable info  \ enables debugging mode display
 variable allowwin  allowwin on
 variable fs    \ is fullscreen enabled?
+variable interact   \ if on, cmdline will receive keys.  check if false before doing game input, if needed.
 
 create fse  /ALLEGRO_ANY_EVENT /allot  \ fullscreen event
 #999 constant EVENT_FULLSCREEN 
@@ -51,7 +52,8 @@ create fse  /ALLEGRO_ANY_EVENT /allot  \ fullscreen event
                                                    \ where bitmaps aren't recreated before trying to draw to them
   then
   etype ALLEGRO_EVENT_DISPLAY_SWITCH_OUT = if  -timer  -audio  then
-  etype ALLEGRO_EVENT_DISPLAY_SWITCH_IN = if  clearkb  +timer   +audio  false to alt?  then
+  etype ALLEGRO_EVENT_DISPLAY_SWITCH_IN = if  clearkb  +timer   +audio  false to alt?
+    [defined] dev [if] interact on [then] then
   etype ALLEGRO_EVENT_DISPLAY_CLOSE = if  0 ExitProcess  then
   etype ALLEGRO_EVENT_KEY_DOWN = if
     evt ALLEGRO_KEYBOARD_EVENT-keycode @ case
