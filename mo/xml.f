@@ -73,11 +73,15 @@ decimal
         >next
     repeat ;
 
+
+: !str  2dup pocket place ;
+: ?print  dup if  pocket count type space  then ;
+
 \ the following use the xn register for the input node, to cut down on stack juggling.
-: ?attr$  ( xn=node adr c -- adr c true | false )  (?attr) dup if @val true then ;
-: ?attr  ( xn=node adr c -- n true | false )  (?attr) dup if @val evaluate true then ;
-: attr ( xn=node adr c -- n )  ?attr 0= abort" attribute not found" ;
-: attr$ ( xn=node adr c -- adr c )  ?attr$ 0= abort" attribute not found" ;
+: ?attr$  ( xn=node adr c -- adr c true | false )  !str (?attr) dup if @val true then ;
+: ?attr  ( xn=node adr c -- n true | false )  !str (?attr) dup if @val evaluate true then ;
+: attr ( xn=node adr c -- n )  ?attr 0= ?print abort" attribute not found" ;
+: attr$ ( xn=node adr c -- adr c )  ?attr$ 0= ?print abort" attribute not found" ;
 
 : $=  compare 0= ;
 
