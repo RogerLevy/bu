@@ -20,7 +20,6 @@
 \   /S  reset the Forth stack
 
 bu: idiom ide:
-[defined] linux [if]  [else]  include bu/lib/win-clipboard.f  [then]
 import bu/mo/draw
 import bu/mo/rect
 
@@ -62,8 +61,9 @@ ide:
 : recall  history count cmdbuf place ;
 : store   cmdbuf count history place ;
 : typechar  cmdbuf count + c!  #1 cmdbuf c+! ;
-: rub       cmdbuf c@  #-1 +  0 max  cmdbuf c! ;
-: paste     clipb cmdbuf append ;
+: rub       cmdbuf c@  #1 -  0 max  cmdbuf c! ;
+: paste     @clipb  #1 -  cmdbuf append ;
+: copy      cmdbuf count !clipb ;
 : ?paused  pause @ if  -timer  0 +to lag   else  +timer  then ;
 : keycode  evt ALLEGRO_KEYBOARD_EVENT-keycode @ ;
 : unichar  evt ALLEGRO_KEYBOARD_EVENT-unichar @ ;
@@ -146,9 +146,10 @@ public:
 
 \ --------------------------------------------------------------------------------------------------
 \ Input handling
-: special
+: special  ( n -- )
   case
     [char] v of  paste  endof
+    [char] c of  copy   endof
     [char] p of  pause toggle  endof
   endcase ;
 : idekeys
@@ -168,7 +169,7 @@ public:
     interact @ -exit
     etype ALLEGRO_EVENT_KEY_CHAR = if
         ctrl? if
-            unichar $60 + special
+            unichar special
         else
             unichar #32 >= unichar #126 <= and if
                 unichar typechar  exit
