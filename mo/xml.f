@@ -47,12 +47,13 @@ decimal
     locals| n c adr |
     >first  begin  dup while
         dup element? if
-            adr c name=  n 0 = and if true exit then
-            -1 +to n
+            adr c name= dup if  -1 +to n  then
+                n -1 = and if  true exit  then
         then
         >next
     repeat ;
 : el[]  ( node adr c n -- node )  ?el[] 0= abort" child element not found" ;
+: el[]?  ?el[] dup if nip then ;
 : eachel  ( node adr c xt -- )  ( ... node -- ... )
     XT >r  to XT
     2>r
@@ -88,6 +89,7 @@ decimal
 : strattr   create   parse-word string,  does>  count  attr$ ;
 : numattr   create   parse-word string,  does>  count  attr ;
 : attrchecker create parse-word string,  does>  count  (?attr) ;
-: childnode create   parse-word string,  does>  ( node n ) count rot el[] ;
+: childnode create   parse-word string,  does>  ( n addr )
+    swap >r xn swap count r> el[] ;
 
 : .xn  cr xn .element ;
