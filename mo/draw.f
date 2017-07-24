@@ -29,6 +29,8 @@ create fore 4 cells allot
 fixed
 : 8>p  s>f 255e f/ f>p ;
 : createcolor create 8>p swap 8>p rot 8>p , , , 1 ,  does> 4@ color ;
+: (sf+)  dup sf@ f>p swap cell+ ;
+: @color  fore (sf+) (sf+) (sf+) (sf+) drop ;
 hex
 00 00 00 createcolor black 69 71 75 createcolor dgrey
 9d 9d 9d createcolor grey cc cc cc createcolor lgrey
