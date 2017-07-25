@@ -61,7 +61,6 @@ create fse  /ALLEGRO_ANY_EVENT /allot  \ fullscreen event
       <altgr>  of  true to alt?  endof
       <enter>  of  alt? -exit  fs toggle  endof
       <f4>     of  alt? -exit  0 ExitProcess endof
-      <f5>     of  refresh  endof
       <f12>    of  break  endof
       <tilde>  of  alt? -exit  info toggle  endof
     endcase
@@ -121,7 +120,5 @@ public:
         until  ?render  \ again for sans timer
     breaking? until
     ok/ ;
-
-: wait  -timer  1 to lag ;  \ broken??
 
 :noname  0 0 0.5 clear-to-color ; >code  to 'render

@@ -152,8 +152,9 @@ public:
     [char] c of  copy   endof
     [char] p of  pause toggle  endof
   endcase ;
+
 : idekeys
-    \ always processed...
+    \ always processed:
     etype ALLEGRO_EVENT_DISPLAY_RESIZE =
     etype EVENT_FULLSCREEN = or if
         /margins  \ /output
@@ -165,7 +166,7 @@ public:
             endcase
     then
 
-    \ only when cmdline has interact...
+    \ only when INTERACT is on:
     interact @ -exit
     etype ALLEGRO_EVENT_KEY_CHAR = if
         ctrl? if

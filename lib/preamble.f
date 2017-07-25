@@ -85,7 +85,6 @@ create null-personality
   ' drop , \ ACCEPT    ( addr u1 -- u2)
 
 : turnkey-starter  null-personality open-personality " include main ok bye" evaluate ;
-: refresh  " eventq al_flush_event_queue  rld  ok" evaluate ;
 
 gild
 
