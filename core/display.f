@@ -21,7 +21,7 @@ create ues  32 cells /allot  \ user event source
 
 : -audio
     mixer 0 al_set_mixer_playing drop
-    0 al_set_default_voice drop
+    \ 0 al_set_default_voice drop
     \ cr ." Audio disabled"
 ;
 
