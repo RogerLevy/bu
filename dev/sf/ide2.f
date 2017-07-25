@@ -243,6 +243,6 @@ function: al_load_ttf_font  ( zfilename size flags -- font )
 : rasa-system  idekeys ;
 : rasa-overlay  interact @ if  0 0 at  .output  then  bottom at  .cmdline ;
 : rasa  ['] rasa-system  is  ?system  ['] rasa-overlay  is ?overlay ;
-: go  /cmdline  rasa  " autoexec.f" ['] included catch drop  begin ok again ;
+: go  /cmdline  rasa  " autoexec.f" ['] included catch ?.catch  begin ok again ;
 
 gild

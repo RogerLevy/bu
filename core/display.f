@@ -8,7 +8,6 @@
 0 value allegro?
 0 value eventq
 0 value display
-0 value mixer
 
 create ues  32 cells /allot  \ user event source
 
@@ -17,28 +16,13 @@ create ues  32 cells /allot  \ user event source
     ues swap 0 al_emit_user_event drop 
 ;
 
+[defined] allegro-audio [if]
+    include bu/audio/allegro
+[else]
+    include bu/audio/fmod
+[then]
+
 \ --------------------------- initializing allegro ----------------------------
-
-: -audio
-    mixer 0 al_set_mixer_playing drop
-    \ 0 al_set_default_voice drop
-    \ cr ." Audio disabled"
-;
-
-: +audio
-    #16 al_reserve_samples not if  " Allegro: Error reserving samples." alert -1 abort  then
-    al_get_default_mixer to mixer
-    \ mixer al_get_default_voice al_attach_mixer_to_voice drop
-    mixer #1 al_set_mixer_playing drop
-    \ cr ." Audio enabled"
-;
-
-: init-audio
-    al_init_acodec_addon not if  " Allegro: Couldn't initialize audio codec addon." alert -1 abort  then
-    al_install_audio not if  " Allegro: Couldn't initialize audio." alert -1 abort  then
-    +audio
-    \ mixer al_get_default_voice al_attach_mixer_to_voice drop
-;
 
 : assertAllegro
   allegro? ?exit
@@ -71,6 +55,18 @@ assertAllegro
           al_flip_display  displaytimer al_start_timer ;
 : -timer  displaytimer al_stop_timer ;
 : timer?  displaytimer al_get_timer_started 0<> ;
+
+\ NAtive and Display Resolutions
+
+create native  /ALLEGRO_DISPLAY_MODE /allot
+  al_get_num_display_modes #1 -  native  al_get_display_mode
+
+: nativew   native x@ s>p ;
+: nativeh   native y@ s>p ;
+: nativewh  nativew nativeh ;
+: displayw  display al_get_display_width s>p ;
+: displayh  display al_get_display_height s>p ;
+: displaywh  displayw displayh ;
 
 \ ----------------------- initializing the display ----------------------------
 
@@ -109,8 +105,10 @@ assertAllegro
 
 : valid?  ['] @ catch nip 0 = ;
 
+: initial-res  [defined] host-ide [if] 640 480 [else] nativewh [then] ;
+
 fixed
-: +display  display valid? ?exit  640 480 initDisplay ;
+: +display  display valid? ?exit  initial-res initDisplay ;
 : -display  display valid? -exit
     display al_destroy_display  0 to display
     eventq al_destroy_event_queue  0 to eventq
@@ -129,15 +127,5 @@ fixed
     :noname [ is >ide ]  ( -- )  HWND focus ;                                                     \ force the Forth prompt to take focus
     >ide
 [then]
-
-create native  /ALLEGRO_DISPLAY_MODE /allot
-  al_get_num_display_modes #1 -  native  al_get_display_mode
-
-: nativew   native x@ s>p ;
-: nativeh   native y@ s>p ;
-: nativewh  nativew nativeh ;
-: displayw  display al_get_display_width s>p ;
-: displayh  display al_get_display_height s>p ;
-: displaywh  displayw displayh ;
 
 +display

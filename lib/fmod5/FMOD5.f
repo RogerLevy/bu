@@ -1,4 +1,6 @@
-library bu/lib/fmod5/fmod.dll
+cd bu/lib/fmod5
+library fmod.dll
+cd ../../..
 
 function: FMOD_System_Create  ( &dest -- ) \ dest receives system
 \ function: FMOD_ErrorString
