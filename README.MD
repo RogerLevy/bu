@@ -1,1 +1,1 @@
-This is a submodule, shared by repos based on [Bubble](github.com/RogerLevy/bubble).
+This is a submodule, shared by repos based on [Bubble](http://github.com/RogerLevy/bubble).
