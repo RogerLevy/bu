@@ -67,7 +67,7 @@ private:
 
 public:
 
-: rsort  ( source count xt -- )  \ result is placed in source, XT is @KEY
+: rsort  ( addr cells xt -- )  \ destructive, XT is @KEY  ( addr -- key )
     swap 1i swap
     over 0= if 2drop drop exit then
     irinit  over src!  irpass  radix++
