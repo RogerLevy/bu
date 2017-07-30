@@ -108,3 +108,5 @@ fixed
 : 2,  swap , , ;
 : 3,  rot , swap , , ;
 : 4,  2swap swap , , swap , , ;
+
+: for  " 0 do" evaluate ; immediate

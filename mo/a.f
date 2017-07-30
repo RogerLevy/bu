@@ -5,3 +5,4 @@ bu: idiom a:
 : !a  " a@ !" evaluate ; immediate
 : a!  " to a@" evaluate ; immediate
 : c@+  " a@ c@   #1 +to a@" evaluate ; immediate
+: a!>   r>  a@ >r   swap a!  call  r> a! ;
