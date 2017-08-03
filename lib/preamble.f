@@ -25,10 +25,10 @@ s" preamble" .notice
 include bu/lib/idiom
   
 \ ffl DOM
-include bu/lib/ffl-0.8.0/ffl.f
+include bu/lib/ffl/ffl.f
 $F320000 'FPOPT !  \ hopefully fixes fixed point math on linux
 pushpath
-cd bu/lib/ffl-0.8.0
+cd bu/lib/ffl
 [undefined] dom-create [if]
     global ffling +order
     include ffl/dom.fs
@@ -55,8 +55,8 @@ cr .( loaded fixed point extension )
 :noname [ is onSetIdiom ]  ints @ ?fixed ;
 
 \ Import Allegro 5 for graphics, sound, input etc
-include bu/lib/allegro-5.2/allegro-5.2.f
-cr .( loaded allegro 5.2 bindings )
+include bu/lib/allegro5/allegro-5.2.f
+cr .( loaded allegro 5 bindings )
 
 \ temporary dev tool - reload from the top
 : rld  ( -- )  s" dev.f" included ;

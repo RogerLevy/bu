@@ -47,7 +47,7 @@ decimal
     library /usr/lib/i386-linux-gnu/liballegro_image.so.5.2
     library /usr/lib/i386-linux-gnu/liballegro_font.so.5.2
 [else]
-    cd bu/lib/allegro-5.2
+    cd bu/lib/allegro5
     : linux-library  0 parse 2drop ;
     [defined] allegro-debug [if]
       library allegro_monolith-debug-5.2.dll
@@ -70,13 +70,13 @@ constant ALLEGRO_VERSION_INT
 
 \ ----------------------------- load files --------------------------------
 
-include bu/lib/allegro-5.2/01_allegro5_general.f
-include bu/lib/allegro-5.2/02_allegro5_events.f
-include bu/lib/allegro-5.2/03_allegro5_keys.f
-include bu/lib/allegro-5.2/04_allegro5_audio.f
-include bu/lib/allegro-5.2/05_allegro5_graphics.f
-include bu/lib/allegro-5.2/06_allegro5_fs.f
-include bu/lib/allegro-5.2/tools.f
+include bu/lib/allegro5/01_allegro5_general.f
+include bu/lib/allegro5/02_allegro5_events.f
+include bu/lib/allegro5/03_allegro5_keys.f
+include bu/lib/allegro5/04_allegro5_audio.f
+include bu/lib/allegro5/05_allegro5_graphics.f
+include bu/lib/allegro5/06_allegro5_fs.f
+include bu/lib/allegro5/tools.f
 
 \ =============================== END ==================================
 
