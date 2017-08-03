@@ -122,6 +122,8 @@ variable fnt  default-font fnt !
 \ Clipping rectangle
 private: variable cx variable cy variable cw variable ch
 public:
+: clipxy  cx cy cw ch al_get_clipping_rectangle  cx @ cy @ ;
+: clipwh  cx cy cw ch al_get_clipping_rectangle  cw @ ch @ ;
 : clip>  ( x y w h -- <code> )
     cx cy cw ch al_get_clipping_rectangle
     4i al_set_clipping_rectangle   r> call
