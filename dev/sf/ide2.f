@@ -57,7 +57,7 @@ ide:
 : lm  margins @x  displayw >= if  0  else  margins @x  then ;
 : tm  margins @y  displayh >= if  0  else  margins @y  then ;
 : ?call  ?dup -exit call ;
-: ?.catch  ?dup -exit .catch ;
+: ?.catch  ?dup -exit .catch  postpone [ ;
 : recall  history count cmdbuf place ;
 : store   cmdbuf count history place ;
 : typechar  cmdbuf count + c!  #1 cmdbuf c+! ;
