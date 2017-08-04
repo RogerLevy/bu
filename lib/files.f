@@ -30,10 +30,10 @@ decimal
 
 \ intent: fetch file contents into dictionary
 \ usage: <filename> file>
-: file>  ( filename c -- addr size )  \ file from
+: file  ( filename c -- addr size )  \ file from
   file@  2dup here dup >r  swap  dup /allot  move  swap free throw  r> swap ;
 
 \ intent: comma a file into the dictionary (same as file> except drops off returned values)
 \ usage: <filename> file,
 : file,  ( filename c -- )  \ file comma
-  file> 2drop ;
+  file 2drop ;

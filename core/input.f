@@ -1,3 +1,4 @@
+
 \ keyboard and joystick support
 decimal
 \ -------------------------------- keyboard -----------------------------------
@@ -40,18 +41,21 @@ create kblast  /ALLEGRO_KEYBOARD_STATE /allot  \ last frame's state
 \ NTS: we don't handle connecting/disconnecting devices yet,
 \   but Allegro 5 /does/ support it. (via an event)
 \ -----------------------------------------------------------------------------
-_AL_MAX_JOYSTICK_STICKS constant MAX_JOYSTICKS
-create joysticks   MAX_JOYSTICKS /ALLEGRO_JOYSTICK_STATE * /allot
+
+fixed  order
+_AL_MAX_JOYSTICK_STICKS s>p constant MAX_STICKS
+create joysticks   MAX_STICKS /ALLEGRO_JOYSTICK_STATE * /allot
 : joystick[]  /ALLEGRO_JOYSTICK_STATE *  joysticks + ;
 : @f>p+  dup sf@ f>p over ! cell+ ;
 : convert-coords  @f>p+ @f>p+ @f>p+ ;
-: >joyhandle  al_get_joystick ;
+: >joyhandle  1i al_get_joystick ;
 : joy ( joy# stick# - vector )  \ get stick position (fixed point)
   /ALLEGRO_JOYSTICK_STATE_STICK *  swap joystick[]
   ALLEGRO_JOYSTICK_STATE-sticks + ;
+: #joys  al_get_num_joysticks s>p ;
 : pollJoys ( -- )
-  al_get_num_joysticks 0 do
+  #joys 0 do
     i >joyhandle i joystick[] al_get_joystick_state
-    _AL_MAX_JOYSTICK_STICKS 0 do  j i joy convert-coords  drop  loop
+    MAX_STICKS 0 do  j i joy convert-coords  drop  loop
   loop ;
 \ ------------------------------ end joysticks --------------------------------

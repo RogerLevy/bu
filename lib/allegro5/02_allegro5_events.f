@@ -1,5 +1,5 @@
+decimal \ important
 
-decimal
 1  constant  ALLEGRO_EVENT_JOYSTICK_AXIS
 2  constant  ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN
 3  constant  ALLEGRO_EVENT_JOYSTICK_BUTTON_UP

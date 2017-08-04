@@ -1,20 +1,9 @@
-decimal
+decimal \ important
 
-\ intent: define chunk of code as a string which will be executed when given <name> is executed.
-\ usage: #define <name> <code>
-: #define  ( - <name> <code> )  \ fake preprocessor code definition
-  create 0 parse bl skip string, immediate
-  does>
-    ( addr ) >r
-    base @ ints @ get-order
-    r> ( addr )
-    fdepth >r
-    ( addr ) decimal count evaluate
-    state @ 0 = r> fdepth = and if  \ if interpreting and fstack has not changed
-      >r set-order ints ! base ! r>
-    else
-      set-order ints ! base !  \ otherwise, assume the data stack has not changed
-    then ;
+[undefined] #defined [if]
+: #define  create  0 parse bl skip evaluate ,  does> @ ;
+: #fdefine  create  0 parse bl skip evaluate sf,  does> sf@ ;
+[then]
 
 : field  create over , + does> @ + ;
 : var  cell field ;

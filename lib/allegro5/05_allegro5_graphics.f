@@ -1,3 +1,4 @@
+decimal \ important
 
 function: al_set_target_bitmap ( ALLEGRO_BITMAP-*bitmap -- )
 function: al_get_target_bitmap ( -- ALLEGRO_BITMAP-*bitmap )
