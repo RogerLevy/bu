@@ -1,3 +1,4 @@
+decimal \ important
 
 \ window stuff
 function: al_set_new_window_position ( int-x int-y -- )

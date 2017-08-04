@@ -1,9 +1,11 @@
+decimal \ important
+
 function: al_create_fs_entry   ( path -- entry )
 function: al_destroy_fs_entry  ( entry -- )
 function: al_get_fs_entry_name ( entry -- cname )
 
-: bit  dup constant  1 << ;
-#1
+: bit  dup constant  1 lshift ;
+1
 bit ALLEGRO_FILEMODE_READ    \ 1
 bit ALLEGRO_FILEMODE_WRITE   \ 1 << 1
 bit ALLEGRO_FILEMODE_EXECUTE \ 1 << 2
@@ -40,7 +42,7 @@ function: al_close_directory  ( ALLEGRO_FS_ENTRY -- bool )
 
 \ /* Helper function for iterating over a directory using a callback. */
 
-#-1
+-1
 enum   ALLEGRO_FOR_EACH_FS_ENTRY_ERROR \ = -1
 enum   ALLEGRO_FOR_EACH_FS_ENTRY_OK    \ =  0
 enum   ALLEGRO_FOR_EACH_FS_ENTRY_SKIP  \ =  1

@@ -1,6 +1,5 @@
 " bubble core" .notice
 global idiom bu:
-
 include bu/core/2016             cr .( loaded entitlements                )
 include bu/core/fixext           cr .( loaded fixed point extensions      )
 include bu/core/display          cr .( loaded basic display management    )

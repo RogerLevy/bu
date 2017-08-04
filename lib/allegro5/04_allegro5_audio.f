@@ -1,5 +1,6 @@
 linux-library /usr/lib/i386-linux-gnu/liballegro_acodec.so.5.2
 
+decimal \ important
 
 \ addon: codec
 function: al_init_acodec_addon ( -- bool )
@@ -32,7 +33,7 @@ ALLEGRO_AUDIO_DEPTH_INT24 ALLEGRO_AUDIO_DEPTH_UNSIGNED or constant ALLEGRO_AUDIO
 #define   ALLEGRO_MIXER_QUALITY_LINEAR   $111
 #define   ALLEGRO_MIXER_QUALITY_CUBIC    $112
 
-#define ALLEGRO_AUDIO_PAN_NONE      -1000.0e
+#fdefine ALLEGRO_AUDIO_PAN_NONE      -1000.0e
 
 #define    ALLEGRO_CHANNEL_CONF_1   $10
 #define    ALLEGRO_CHANNEL_CONF_2   $20
