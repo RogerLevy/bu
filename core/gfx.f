@@ -25,5 +25,5 @@ decimal
     3 constant FLIP_HV
 fixed
 
-: loadbmp  zstring al_load_bitmap ;
-: savebmp  zstring al_save_bitmap ;
+: loadbmp  ( adr c -- bmp ) zstring al_load_bitmap ;
+: savebmp  ( bmp adr c -- ) zstring swap al_save_bitmap 0= abort" Allegro: Error saving bitmap." ;
