@@ -105,7 +105,7 @@ create native  /ALLEGRO_DISPLAY_MODE /allot
 
 : valid?  ['] @ catch nip 0 = ;
 
-: initial-res  [defined] host-ide [if] 640 480 [else] nativewh [then] ;
+: initial-res  [defined] host-ide [if] 640 480 [else] nativewh 20 100 2- [then] ;
 
 fixed
 : +display  display valid? ?exit  initial-res initDisplay ;
