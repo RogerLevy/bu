@@ -39,5 +39,5 @@
 : byt  dup $ff and c>p swap 8 >> ;
 : 4reverse   swap 2swap swap ;
 : 3reverse   swap rot ;
-: hex>color  byt byt byt byt drop >r 3reverse r> ;
-: 3hex>color  byt byt byt drop 3reverse ;
+: >rgba  ( val -- r g b a ) byt byt byt byt drop >r 3reverse r> ;
+: >rgb   ( val -- r g b )  byt byt byt drop 3reverse ;
