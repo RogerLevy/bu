@@ -3,25 +3,16 @@
 \  Maximum 16384 tiles.
 
 \ TODO:
-<<<<<<< HEAD
-\  unloadtiles - destroy all subbitmaps and clear the cellstack
-\  tile collision
-\  tilemap? display and other routines...
-=======
 \  [ ] - Tile collision
 \  [ ] - Render a flipped tilemap
->>>>>>> 86715d0... Rename @LENGTH to #PUSHED and replace VACATE with TRUNCATE
 
 bu: idiom tilegame:
-import bu/mo/image
-import bu/mo/cellstack
+    import bu/mo/image
+    import bu/mo/cellstack
+    import bu/mo/a
+    import bu/mo/pen
+    import bu/mo/draw
 
-<<<<<<< HEAD
-4096 cellstack tiles
-: tile  4095 and tiles [] @ ;
-: +tiles  tiles @length swap  dup subcount @ 0 do  i over imgsubbmp  tiles push  loop  drop ;
-: loadtiles ( image tilew tileh -- firstn ) third subdivide  +tiles ;
-=======
 16384 dup constant maxtiles  cellstack tiles
 : tile  maxtiles 1 - and tiles [] @ ;
 : +tiles  tiles #pushed swap  dup subcount @ 0 do  i over imgsubbmp  tiles push  loop  drop ;
@@ -55,4 +46,3 @@ import bu/mo/cellstack
     >r  clipxy clipwh 2+  third subw 2v@ 2/  1 1 2+  r>  (draw-tilemap) ;
 
 
->>>>>>> 86715d0... Rename @LENGTH to #PUSHED and replace VACATE with TRUNCATE

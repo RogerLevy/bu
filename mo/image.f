@@ -6,10 +6,17 @@ bu: idiom image:
   xvar subcols  xvar subrows  xvar subcount
 struct /image
 
-: initImage  ( ALLEGRO_BITMAP image -- ) bmp ! ;
+: init-image ( ALLEGRO_BITMAP image -- )  dup /image erase  bmp !  ;
 
 : image  ( -- <name> <path> )
-  create /image allotment <filespec> zstring al_load_bitmap swap initImage ;
+  create /image allotment <filespec> zstring al_load_bitmap swap init-image ;
+
+: -bmp  ?dup -exit al_destroy_bitmap ;
+
+: load-image  ( image path c -- )
+    zstring al_load_bitmap swap init-image ;
+
+: free-image  ( image -- ) bmp @ -bmp ;
 
 \ dimensions
 : imgw  bmp @ bmpw ;

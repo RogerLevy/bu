@@ -1,7 +1,7 @@
 \ Basic graphics wordset
-import bu/mo/pen        \ parent should also import the pen in order to use this package.
+import bu/mo/pen        \ accessory; parent should also import the pen in order to use this package.
 bu: idiom draw:      \ do this first so early-out works
-import bu/mo/pen        \ don't remove this.  parent may be different from bu:
+    import bu/mo/pen        \ don't remove this.  parent may be different from bu:
 
 private:
     : push postpone >r ; immediate
@@ -121,6 +121,8 @@ variable fnt  default-font fnt !
 \ Clipping rectangle
 private: variable cx variable cy variable cw variable ch
 public:
+: clipxy  cx cy cw ch al_get_clipping_rectangle  cx @ cy @ ;
+: clipwh  cx cy cw ch al_get_clipping_rectangle  cw @ ch @ ;
 : clip>  ( x y w h -- <code> )
     cx cy cw ch al_get_clipping_rectangle
     4i al_set_clipping_rectangle   r> call
