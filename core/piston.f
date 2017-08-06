@@ -51,8 +51,10 @@ create fse  /ALLEGRO_ANY_EVENT /allot  \ fullscreen event
     -timer  display al_acknowledge_resize  +timer  \ we have to turn off the timer to avoid a race condition
                                                    \ where bitmaps aren't recreated before trying to draw to them
   then
-  etype ALLEGRO_EVENT_DISPLAY_SWITCH_OUT = if  -timer  -audio  then
+  etype ALLEGRO_EVENT_DISPLAY_SWITCH_OUT = if  -timer  -audio  0 to lag  then
   etype ALLEGRO_EVENT_DISPLAY_SWITCH_IN = if  clearkb  +timer   +audio  false to alt?
+    eventq al_flush_event_queue
+    0 to lag
     [defined] dev [if] interact on [then] then
   etype ALLEGRO_EVENT_DISPLAY_CLOSE = if  0 ExitProcess  then
   etype ALLEGRO_EVENT_KEY_DOWN = if
@@ -97,7 +99,7 @@ defer ?system   ' noop is ?system   \ system events
 : render  unmount  'render try to renderr ;
 : step  'step try to steperr ;
 private:
-    : update?  timer? if  lag dup -exit drop  then  eventq al_is_event_queue_empty  lag 4 >= or ;
+    : update?  timer? if  lag dup -exit drop  then  eventq al_is_event_queue_empty   lag 4 >= or ;
     : wait  eventq evt al_wait_for_event ;
     : ?render  update? -exit  1 +to #frames  ?fs  render  unmount  ?overlay  al_flip_display
         0 to lag ;
@@ -115,9 +117,9 @@ public:
     begin
         wait
         begin
-            std  ?system  'go try drop  ?step  ?render
+            std  ?system  'go try drop  ?step  \ ?render
             eventq evt al_get_next_event 0=  breaking? or
-        until  ?render  \ again for sans timer
+        until  ?render
     breaking? until
     ok/ ;
 
