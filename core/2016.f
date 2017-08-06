@@ -110,3 +110,4 @@ fixed
 : 4,  2swap swap , , swap , , ;
 
 : for  " 0 do" evaluate ; immediate
+: :is  :noname  postpone [  [compile] is  ] ;
