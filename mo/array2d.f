@@ -8,12 +8,6 @@ bu: idiom array2d:
   >code -rot  cells bounds do  i swap dup >r call  r>  cell +loop  drop ;
 : `batch  ( ... addr xt -- ... )  ( ... addr -- ... )  \ -1 is terminator
   >code begin  over @ 0 >=  while  2dup 2>r  call  r> r> cell+ swap repeat  2drop ;
-: 2move  ( src /stride dest /stride #rows /bytes -- )
-  locals| #bytes #rows deststride dest srcstride src |
-  #rows 0 do
-    src dest #bytes move
-    srcstride +to src  deststride +to dest
-  loop ;
 \ ---------------------------------- array2d ----------------------------------
 
 node inherit

@@ -112,3 +112,10 @@ fixed
 
 : for  " 0 do" evaluate ; immediate
 : :is  :noname  postpone [  [compile] is  ] ;
+
+: 2move  ( src /pitch dest /pitch #rows /bytes -- )
+  locals| #bytes #rows deststride dest srcstride src |
+  #rows 0 do
+    src dest #bytes move
+    srcstride +to src  deststride +to dest
+  loop ;
