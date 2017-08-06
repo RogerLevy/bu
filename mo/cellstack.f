@@ -2,6 +2,7 @@
 
 bu: idiom cellstack:
 
+<<<<<<< HEAD
 : cellstack  ( max-size -- <name> )  create 0 , cells /allot ;
 : @length  @ ;
 : vacate  0 swap ! ;
@@ -12,3 +13,14 @@ bu: idiom cellstack:
 : pops    ( stack n -- ... ) swap locals| s |  0 ?do  s pop  loop ;
 : splace  ( addr count stack -- ) 2dup !  cell u+  swap imove ;
 : scount  dup @   cell u+ ;
+=======
+: cellstack  ( max-size -- <name> )  ( -- stack/data )  create 0 , cells /allot does> cell+ ;
+: #pushed  cell- @ ;
+: truncate  ( stack/data newsize -- )  swap cell- ! ;
+: pop  ( s/d -- val )  cell-  >r  r@ @ 0= abort" ERROR: Stack object underflow." r@ dup @ cells + @  -1 r> +! ;
+: push  ( val s/d -- )  cell-  >r  1 r@ +!   r> dup @ cells + !  ;
+: pushes  ( ... s/d n -- ) -cell u+  swap locals| s |  0 ?do  s push  loop ;
+: pops    ( s/d n -- ... ) -cell u+  swap locals| s |  0 ?do  s pop  loop ;
+: splace  ( addr count s/d -- ) -cell u+  2dup !  cell u+  swap imove ;
+: scount  ( s/d -- addr count ) dup cell- @  ;
+>>>>>>> 86715d0... Rename @LENGTH to #PUSHED and replace VACATE with TRUNCATE

@@ -66,6 +66,7 @@ decimal
 : >> rshift ;
 fixed
 : th  cells + ;
+: []  ( n addr -- addr )  swap cells + ;
 : bit  dup constant  1 << ;
 -1 constant none
 
