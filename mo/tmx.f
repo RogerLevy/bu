@@ -56,6 +56,7 @@ private: 0 value map public:
 : @xy      dup @x swap @y ;
 
 
+\ Opening a TMX
 : >tsx  @source loadxml ;
 : load-tilesets
     tilesetdoms scount for  @+ dom-free  loop drop
@@ -75,7 +76,8 @@ private: 0 value map public:
 : single-image  ( tileset -- path c )  " image" 0 el[] @source ;
 : @tilecount  ( tileset -- n )  " tilecount" attr ;
 : tile-gid  ( tileset n -- gid )  over @firstgid >r  " tile" rot el[] @id  r> + ;
-: tile-image  ( tileset n -- gid imagepath c )  " tile" rot el[] " image" 0 el[] @source ;
+: tile-image  ( tileset n -- imagepath c )  " tile" rot el[] " image" 0 el[] @source ;
+
 
 \ Layers!
 : #layers  layernodes #pushed ;
@@ -104,10 +106,12 @@ private: 0 value map public:
             i objgroup[]  unloop exit
         then
     loop  0 ;
-: @gid  " gid" attr ;
+: @gid  " gid" attr $0fffffff and ;
 : @type  " type" attr$ ;
 : @rotation  " rotation" attr ;
 : @visible  " visible" attr 0<> ;
+: @vflip  " gid" attr $40000000 and 0<> ;
+: @hflip  " gid" attr $80000000 and 0<> ;
 : rectangle?  " gid" ?attr dup if nip then  not ;  \ doesn't actually guarantee it's not some other shape, because TMX is stupid.  so check for those first.
 \ : polygon? ;
 \ : ellipse? ;
