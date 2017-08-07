@@ -110,11 +110,13 @@ public:
 : step>  r>  to 'step ;  ( -- <code> )  ( -- )
 : go>  r> to 'go   0 to 'step ;  ( -- <code> )  ( -- )
 
+variable logevents
 : ok
     /ok
     begin
         wait
         begin
+            logevents @ if  etype h.  then
             std  ?system  'go try drop  ?step  ?render
             eventq evt al_get_next_event 0=  breaking? or
         until  ?render  \ again for sans timer
