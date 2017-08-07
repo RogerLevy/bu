@@ -15,8 +15,8 @@
 
 \ You can access one TMX file at a time.
 \ To preserve global ID coherence, when you load the tiles of a TMX file, ALL tileset nodes are loaded
-\ into the system, freeing what was there before.  You can load other maps without reloading the
-\ tiles, but you can't mix and match tilesets.
+\ into the system, freeing what was there before.  To mitigate loading time I might implement asset caching or preloading
+\ at some point...
 
 \ Programmer's rant:
 \ I just want to say that Tiled is a classic example of passing time and thought onto the user ...
