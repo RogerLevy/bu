@@ -30,7 +30,8 @@ bu: idiom tmx:   \ BU is parent to limit coupling
     import bu/mo/xml
     import bu/mo/base64
 
-private: 0 value map public:
+private: 0 value map
+public:
 
 100 cellstack tilesetdoms
 100 cellstack layernodes
@@ -50,6 +51,7 @@ create tmxdir  256 allot
 private:
     : @source  " source" attr$ ;
     : @name    " name" attr$ ;
+    : ?name    " name" ?attr$ ;
     : @w       " width" attr ;
     : @h       " height" attr ;
     : @wh      dup @w swap @h ;
@@ -57,6 +59,7 @@ private:
     : @x       " x" attr ;
     : @y       " y" attr ;
     : @xy      dup @x swap @y ;
+    : ?type    " type" ?attr$ ;
 public:
 
 \ Opening a TMX
@@ -129,5 +132,5 @@ public:
 \ : ellipse? ;
 \ : polyline? ;
 0 value (code)
-: objects>  ( layer -- <code> )  ( objectnode -- )
+: objects>  ( objgroup -- <code> )  ( objectnode -- )
     r> to (code)  " object" eachel>  (code) call ;
