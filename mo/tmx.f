@@ -13,7 +13,6 @@
 \  [ ] - Other shapes besides rectangle
 \  [ ] - Add custom property to allow some tile images not to be loaded since they're for the editor only and would waste RAM
 
-\ Maps MUST be stored in data/maps
 \ You can access one TMX file at a time.
 \ To preserve global ID coherence, when you load the tiles of a TMX file, ALL tileset nodes are loaded
 \ into the system, freeing what was there before.  You can load other maps without reloading the
@@ -25,8 +24,8 @@
 \ And why all the tilemap format options?  Surely people could have hung with 2 or 3 instead of 5.
 \ Why doesn't anyone understand what a serious issue this is?  Instead of one person solving a problem, they'd have hundreds of people deal with the unnecessary problems they created...
 
-bu: idiom tiled:   \ BU is parent to limit coupling
-    import bu/mo/nodes
+bu: idiom tmx:   \ BU is parent to limit coupling
+    import bu/mo/node
     import bu/mo/cellstack
     import bu/mo/xml
     import bu/mo/base64
@@ -37,7 +36,10 @@ private: 0 value map public:
 100 cellstack layernodes
 100 cellstack objgroupnodes
 
+200 cellstack tilesets  \ firstgid , tileset element , first gid , tileset element , ...
+
 0 value lasttmx
+create tmxdir  256 allot
 
 : loadxml   file@  2dup xml  >r  drop free throw  r> ;
 
@@ -45,38 +47,47 @@ private: 0 value map public:
 : load-layers  layernodes 0 truncate  map " layer" eachel> layernodes push ;
 
 \ used with several node types:
-: @source  " source" attr$ ;
-: @name    " name" attr$ ;
-: @w       " width" attr ;
-: @h       " height" attr ;
-: @wh      dup @w swap @h ;
-: @id      " id" attr ;
-: @x       " x" attr ;
-: @y       " y" attr ;
-: @xy      dup @x swap @y ;
-
+private:
+    : @source  " source" attr$ ;
+    : @name    " name" attr$ ;
+    : @w       " width" attr ;
+    : @h       " height" attr ;
+    : @wh      dup @w swap @h ;
+    : @id      " id" attr ;
+    : @x       " x" attr ;
+    : @y       " y" attr ;
+    : @xy      dup @x swap @y ;
+public:
 
 \ Opening a TMX
-: >tsx  @source loadxml ;
+private:
+: !dir  2dup 2dup [char] / [char] \ replace-char  -name  #1 +  ( add the trailing slash )  tmxdir place ;
+: +dir  tmxdir count 2swap strjoin ;
+public:
+: >tsx  @source +dir 2dup cr type loadxml ;
+: +tileset  ( firstgid tilesetdom -- )
+    dup tilesetdoms push  >root " tileset" 0 child  swap tilesets push  tilesets push ;
 : load-tilesets
     tilesetdoms scount for  @+ dom-free  loop drop
     tilesetdoms 0 truncate
-    map " tileset" eachel> >tsx tilesetdoms push ;
-: >map   " map" 0 ?el[] not abort" File is not a recognized TMX file!" ;
-: addpath  " data/maps/" 2swap strjoin ;
+    tilesets 0 truncate
+    map " tileset" eachel> dup " firstgid" attr  swap >tsx +tileset ;
+: >map   " map" 0 ?child not abort" File is not a recognized TMX file!" ;
 : closetmx  lasttmx ?dup -exit dom-free  0 to lasttmx ;
-: opentmx  ( path c -- )  closetmx  addpath  loadxml dup to lasttmx  >root >map to map   load-tilesets  load-layers  load-objectgroups ;
+: opentmx  ( path c -- )  !dir  closetmx  loadxml dup to lasttmx  >root >map to map  load-tilesets  load-layers  load-objectgroups ;
 
 
 \ Tilesets!
+\ "tileset" really refers to a 2 cell data structure defined above, in TILESETS.
 : #tilesets  tilesetdoms #pushed ;
-: tileset[]  tilesetdoms [] @ >root ;
-: multi-image?  ( tileset -- flag )  " image" 0 el[]? ;
-: @firstgid  ( tileset -- gid )  " firstgid" $attr ;
-: single-image  ( tileset -- path c )  " image" 0 el[] @source ;
-: @tilecount  ( tileset -- n )  " tilecount" attr ;
-: tile-gid  ( tileset n -- gid )  over @firstgid >r  " tile" rot el[] @id  r> + ;
-: tile-image  ( tileset n -- imagepath c )  " tile" rot el[] " image" 0 el[] @source ;
+: tileset[]  2 * tilesets [] ;
+: >el  cell+ @ ;
+: multi-image?  ( tileset -- flag )  >el " image" 0 child? not ;
+: @firstgid  ( tileset -- gid )  @ ;
+: single-image  ( tileset -- path c )  >el " image" 0 child @source +dir ;
+: @tilecount  ( tileset -- n )  >el " tilecount" attr ;
+: tile-gid  ( tileset n -- gid )  over @firstgid >r  >r >el " tile" r> child @id  r> + ;
+: tile-image  ( tileset n -- imagepath c )  >r >el " tile" r> child " image" 0 child @source +dir ;
 
 
 \ Layers!
@@ -92,8 +103,8 @@ private: 0 value map public:
 : extract  ( layer dest pitch -- )  \ read out tilemap data. you'll probably need to process it.
     third @wh locals| h w pitch dest |  ( layer )
     here >r
-    " data" 0 el[] @val b64, \ Base64, no compression!!!
-    r@ w cells dest pitch h w cells 2move
+    " data" 0 child  >text  b64, \ Base64, no compression!!!
+    r@  w cells  dest  pitch  h  w cells  2move
     r> reclaim ;
 
 \ Object groups!
@@ -107,7 +118,8 @@ private: 0 value map public:
         then
     loop  0 ;
 : @gid  " gid" attr $0fffffff and ;
-: @type  " type" attr$ ;
+private: : @type  " type" attr$ ;
+public:
 : @rotation  " rotation" attr ;
 : @visible  " visible" attr 0<> ;
 : @vflip  " gid" attr $40000000 and 0<> ;

@@ -42,7 +42,7 @@ create kblast  /ALLEGRO_KEYBOARD_STATE /allot  \ last frame's state
 \   but Allegro 5 /does/ support it. (via an event)
 \ -----------------------------------------------------------------------------
 
-fixed  order
+fixed 
 _AL_MAX_JOYSTICK_STICKS s>p constant MAX_STICKS
 create joysticks   MAX_STICKS /ALLEGRO_JOYSTICK_STATE * /allot
 : joystick[]  /ALLEGRO_JOYSTICK_STATE *  joysticks + ;

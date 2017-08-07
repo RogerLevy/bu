@@ -6,13 +6,13 @@ bu: idiom xml:
     import bu/mo/cellstack
 
 0 value dom
-decimal
+\ decimal
+fixed
 
 \ the node in here is different from the one defined in nodes.f
 : >root ( dom -- node )  dom>iter nni-root ;
 : >next ( node -- node|0 )  nnn>dnn dnn-next@ ;
-: xml  ( adr c -- DOM )
-    dom-new  true over dom-read-string 0= throw ;
+: xml  ( adr c -- DOM )  dom-new >r  true r@ dom-read-string 0= throw  r> ;
 \ NOTE: the word DOM is not used for the rest of the file!!!!!!!!!!  (it's kind of a dumb convenience)
 : #children  ( node -- n )  nnn>children dnl>length @ ;
 : @name  ( node -- adr c )  dom>node>name str-get ;
@@ -33,17 +33,19 @@ decimal
 : (.attributes)  ( node -- flag )  dup @type dom.attribute = if  .attribute  else  drop  then  false ;
 : .attributes  ( node -- )  ['] (.attributes) scan ;
 : name=  third @name compare 0= ;
-: ?el[] ( node adr c n -- node true | false )
+: ?child ( node adr c n -- node true | false )
     locals| n c adr |
     >first  begin  dup while
         dup element? if
-            adr c name= dup if  -1 +to n  then
-                n -1 = and if  true exit  then
+            adr c name= if
+                -1.0 +to n
+                n -1.0 = if  true exit  then
+            then
         then
         >next
     repeat ;
-: el[]  ( node adr c n -- node )  ?el[] 0= abort" child element not found" ;
-: el[]?  ?el[] dup if nip then ;
+: child  ( node adr c n -- node )  ?child 0= abort" child element not found" ;
+: child?  ?child dup if nip then ;
 : eachel  ( node adr c xt -- )  ( ... node -- ... )
     XT >r  to XT
     2>r
@@ -80,6 +82,9 @@ decimal
 \ : numattr   create   parse-word string,  does>  count  attr ;
 \ : attrchecker create parse-word string,  does>  count  (?attr) ;
 \ : childnode create   parse-word string,  does>  ( n addr )
-\     swap >r xn swap count r> el[] ;
+\     swap >r xn swap count r> child ;
 
 : x.  ( node -- )  dup .name dup .attributes .elements ;
+
+: >text  ( node -- adr c )
+    >first  begin  dup @type dom.text <> while  >next  repeat  @val ;

@@ -1,5 +1,5 @@
 bu: idiom array2d:
-
+    import bu/mo/porpoise
 
 \ ----------------------------- 2d arrays support -----------------------------
 : clip  ( col row #cols #rows #destcols #destrows -- col row #cols #rows )
@@ -10,14 +10,16 @@ bu: idiom array2d:
   >code begin  over @ 0 >=  while  2dup 2>r  call  r> r> cell+ swap repeat  2drop ;
 \ ---------------------------------- array2d ----------------------------------
 
-node inherit
+object inherit
     xvar numcols  xvar numrows  0 xfield data
 subclass array2d-class
 
+decimal
 : array2d  ( numcols numrows -- <name> )  ( -- data )
-  2pfloor 2dup  create array2d-class obj  numcols 2v!  * cells /allot ;
+  2pfloor 2dup  create  here  array2d-class instance,  numcols 2v!  2i * cells /allot ;
 : dims  ( array2d -- numcols numrows )  numcols 2v@ ;
-: count2d ( array2d -- data #cells )  dup data swap numcols 2v@ * ;
+: count2d ( array2d -- data #cells )  dup data swap numcols 2v@ 2i * ;
+fixed
 
 : (clamp)  ( col row array2d -- same )
   >r  0 0 r@ numcols 2v@ 2clamp  r> ;
@@ -27,8 +29,10 @@ subclass array2d-class
 : (clip)   ( col row #cols #rows array2d -- same )
   dims 1 1 2- clip ;
 
+decimal
 : addr  ( col row array2d -- addr )
-  (clamp) >r  r@ numcols @ * +  cells  r> data + ;
+  (clamp) >r  r@ numcols @ 1i * +  cells  r> data + ;
+fixed
 
 : >stride  numcols @ cells ;
 : addr-stride  ( col row array2d -- addr /stride )  dup >r addr r> >stride ;
