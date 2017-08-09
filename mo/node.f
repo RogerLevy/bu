@@ -1,7 +1,7 @@
 bu: idiom node:
     import bu/mo/porpoise
 
-object inherit  xvar prev  xvar next  xvar parent    subclass node
+object inherit  xvar parent  xvar prev  xvar next    subclass node
 object inherit  xvar length  xvar first  xvar tail   subclass container
 
 : (unlink)  ( node -- )
