@@ -94,9 +94,9 @@ public:
 : @tilecount  ( tileset -- n )  >el " tilecount" attr ;
 : tile-gid  ( tileset n -- gid )  over @firstgid >r  >r >el " tile" r> child @id  r> + ;
 : tile-image  ( tileset n -- imagepath c )  >r >el " tile" r> child " image" 0 child @source +dir ;
-: tile-dims  ( tileset -- w h )  dup " tilewidth" attr swap " tileheight" attr ;
-: tiles>  ( tileset -- <code> )
-    r>  (code) >r  to (code)  " tile" eachel>  (code) call  r> to (code) ;
+: tile-dims  ( tileset -- w h )  >el dup " tilewidth" attr swap " tileheight" attr ;
+: (tiles)  " tile" eachel>  (code) call ;
+: tiles>  ( tileset -- <code> )  >el  r>  (code) >r  to (code)  (tiles) r> to (code) ;
 
 \ Layers!
 : #layers  layernodes #pushed ;
@@ -137,7 +137,7 @@ public:
 \ : polygon? ;
 \ : ellipse? ;
 \ : polyline? ;
-: objects>  ( objgroup -- <code> )  ( objectnode -- )
-    r>  (code) >r  to (code)  " object" eachel>  (code) call  r> to (code) ;
-: objgroups>  ( -- <code> )  ( objectgroupnode -- )
-    r>  (code) >r  to (code)  " objectgroup" eachel>  (code) call  r> to (code) ;
+: (objects)  " object" eachel>  (code) call ;
+: objects>  ( objgroup -- <code> )  ( objectnode -- )  r>  (code) >r  to (code)  (objects) r> to (code) ;
+: (objgroups)  map " objectgroup" eachel>  (code) call ;
+: objgroups>  ( -- <code> )  ( objectgroupnode -- )  r>  (code) >r  to (code)  (objgroups)  r> to (code) ;

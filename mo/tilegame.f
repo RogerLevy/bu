@@ -17,8 +17,8 @@ bu: idiom tilegame:
 : tile  maxtiles 1 - and tiles [] @ ;
 : +tiles  tiles #pushed swap  dup subcount @ 0 do  i over imgsubbmp  tiles push  loop  drop ;
 : add-tiles ( image tilew tileh -- firstn ) third subdivide  +tiles ;
-: change-tiles  ( image tilew tileh n -- )  tiles #pushed >r  tiles truncate  add-tiles  drop
-    tiles #pushed r> tiles max truncate ;
+: change-tiles  ( image tilew tileh n -- )  tiles #pushed >r  tiles swap truncate  add-tiles  drop
+    tiles #pushed r> max tiles swap truncate ;
 : clear-tiles  ( -- )  0 tiles [] a!>  maxtiles for  @+ -bmp  loop  tiles 0 truncate ;
 
 
