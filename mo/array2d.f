@@ -29,10 +29,8 @@ fixed
 : (clip)   ( col row #cols #rows array2d -- same )
   dims 1 1 2- clip ;
 
-decimal
 : addr  ( col row array2d -- addr )
-  (clamp) >r  r@ numcols @ 1i * +  cells  r> data + ;
-fixed
+  (clamp) >r  r@ numcols @ * +  cells  r> data + ;
 
 : >stride  numcols @ cells ;
 : addr-stride  ( col row array2d -- addr /stride )  dup >r addr r> >stride ;
