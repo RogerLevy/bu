@@ -27,3 +27,21 @@ fixed
 
 : loadbmp  ( adr c -- bmp ) zstring al_load_bitmap ;
 : savebmp  ( bmp adr c -- ) zstring swap al_save_bitmap 0= abort" Allegro: Error saving bitmap." ;
+
+\ transformation tools
+sfvariable tempx
+sfvariable tempy
+: unscaled  ( x y -- x y )
+    al_get_current_transform ?dup -exit
+    m0 /transform move
+    m0 al_invert_transform
+    2f tempy sf! tempx sf!
+    m0 tempx tempy al_transform_coordinates
+    tempx sf@ round f>p tempy sf@ round f>p ;
+: scaled  ( x y -- x y )
+    al_get_current_transform ?dup -exit
+    m0 /transform move
+    2f tempy sf! tempx sf!
+    m0 tempx tempy al_transform_coordinates
+    tempx sf@ round f>p tempy sf@ round f>p ;
+
