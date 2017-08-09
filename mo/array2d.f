@@ -62,7 +62,7 @@ fixed
 
 :noname  cr  cells bounds do  i ?  cell +loop ;
 \ : 2d.  literal each2d ;
-: 2d.  >r 0 0 r@ dims 16 100 2min  r> literal some2d  ;
+: 2d.  >r 0 0 r@ dims 16 16 2min  r> literal some2d  ;
 
 
 \ test
