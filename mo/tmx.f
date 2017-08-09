@@ -30,7 +30,9 @@ bu: idiom tmx:   \ BU is parent to limit coupling
     import bu/mo/xml
     import bu/mo/base64
 
-private: 0 value map
+private:
+    0 value map
+    0 value (code)
 public:
 
 100 cellstack tilesetdoms
@@ -48,7 +50,7 @@ create tmxdir  256 allot
 : load-layers  layernodes 0 truncate  map " layer" eachel> layernodes push ;
 
 \ used with several node types:
-private:
+\ private:
     : @source  " source" attr$ ;
     : @name    " name" attr$ ;
     : ?name    " name" ?attr$ ;
@@ -60,7 +62,8 @@ private:
     : @y       " y" attr ;
     : @xy      dup @x swap @y ;
     : ?type    " type" ?attr$ ;
-public:
+\ public:
+\ privates export-wordlist tmx-access \ workaround for possible name collision issue
 
 \ Opening a TMX
 private:
@@ -68,7 +71,7 @@ private:
 : +dir  tmxdir count 2swap strjoin ;
 public:
 : >tsx  @source +dir 2dup cr type loadxml ;
-: +tileset  ( firstgid tilesetdom -- )
+: +tileset  ( firstgid tileset -- )
     dup tilesetdoms push  >root " tileset" 0 child  swap tilesets push  tilesets push ;
 : load-tilesets
     tilesetdoms scount for  @+ dom-free  loop drop
@@ -84,19 +87,21 @@ public:
 \ "tileset" really refers to a 2 cell data structure defined above, in TILESETS.
 : #tilesets  tilesetdoms #pushed ;
 : tileset[]  2 * tilesets [] ;
-: >el  cell+ @ ;
+    : >el  cell+ @ ;
 : multi-image?  ( tileset -- flag )  >el " image" 0 child? not ;
 : @firstgid  ( tileset -- gid )  @ ;
 : single-image  ( tileset -- path c )  >el " image" 0 child @source +dir ;
 : @tilecount  ( tileset -- n )  >el " tilecount" attr ;
 : tile-gid  ( tileset n -- gid )  over @firstgid >r  >r >el " tile" r> child @id  r> + ;
 : tile-image  ( tileset n -- imagepath c )  >r >el " tile" r> child " image" 0 child @source +dir ;
-
+: tile-dims  ( tileset -- w h )  dup " tilewidth" attr swap " tileheight" attr ;
+: tiles>  ( tileset -- <code> )
+    r>  (code) >r  to (code)  " tile" eachel>  (code) call  r> to (code) ;
 
 \ Layers!
 : #layers  layernodes #pushed ;
 : layer[]  layernodes [] @ ;
-: ?layer  ( name c -- layer | 0 )  \ find layer by name
+: ?layer  ( name c -- layer-node | 0 )  \ find layer by name
     locals| c n |
     #layers for
         i layer[]  @name  n c compare 0= if
@@ -106,9 +111,12 @@ public:
 : extract  ( layer dest pitch -- )  \ read out tilemap data. you'll probably need to process it.
     third @wh locals| h w pitch dest |  ( layer )
     here >r
-    " data" 0 child  >text  b64, \ Base64, no compression!!!
-    r@  w cells  dest  pitch  h  w cells  2move
+        " data" 0 child  >text  b64, \ Base64, no compression!!!
+        r@  w cells  dest  pitch  h  w cells  2move
     r> reclaim ;
+: layers>  ( -- <code> )  ( layernode -- )
+    r>  (code) >r  to (code)  " layer" eachel>  (code) call  r> to (code) ;
+
 
 \ Object groups!
 : #objgroups  objgroupnodes #pushed ;
@@ -121,16 +129,15 @@ public:
         then
     loop  0 ;
 : @gid  " gid" attr $0fffffff and ;
-private: : @type  " type" attr$ ;
-public:
-: @rotation  " rotation" attr ;
-: @visible  " visible" attr 0<> ;
+: @rotation  " rotation" ?attr not if 0 then ;
+: @visible  " visible" ?attr if 0<> else true then ;
 : @vflip  " gid" attr $40000000 and 0<> ;
 : @hflip  " gid" attr $80000000 and 0<> ;
-: rectangle?  " gid" ?attr dup if nip then  not ;  \ doesn't actually guarantee it's not some other shape, because TMX is stupid.  so check for those first.
+: rectangle?  " gid" ?attr dup if nip then  not ;  \ doesn't actually guarantee it's not some other shape, because TMX is stupid.  so check for those first...
 \ : polygon? ;
 \ : ellipse? ;
 \ : polyline? ;
-0 value (code)
 : objects>  ( objgroup -- <code> )  ( objectnode -- )
-    r> to (code)  " object" eachel>  (code) call ;
+    r>  (code) >r  to (code)  " object" eachel>  (code) call  r> to (code) ;
+: objgroups>  ( -- <code> )  ( objectgroupnode -- )
+    r>  (code) >r  to (code)  " objectgroup" eachel>  (code) call  r> to (code) ;
