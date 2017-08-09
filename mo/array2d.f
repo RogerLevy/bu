@@ -54,8 +54,9 @@ fixed
 :noname  third ifill ;
 : fill2d  ( val col row #cols #rows array2d -- )  literal some2d  drop ;
 
-: each2d  ( ... array2d xt -- ... )  ( ... addr #cells -- ... )
+: scan2d  ( ... array2d xt -- ... )  ( ... addr #cells -- ... )
   >r >r  0  0  r@ dims  r> r> some2d ;
+: scan2d>  r> code> scan2d ;
 
 \ : some2d>  r> code> some2d ;
 \ : each2d>  r> code> each2d ;
