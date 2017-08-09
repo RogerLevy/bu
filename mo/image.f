@@ -25,14 +25,14 @@ struct /image
 
 \ ------------------------------ subimg stuff -------------------------------
 : subdivide  ( tilew tileh img -- )
-  >r  2dup r@ subw 2v!  2af r@ fsubw 2v!
-  r@ imgwh  r@ subw 2v@  2/ 2pfloor  2dup r@ subcols 2v!
-  *  r> subcount ! ;
+    >r  2dup r@ subw 2v!  2af r@ fsubw 2v!
+    r@ imgwh  r@ subw 2v@  2/ 2pfloor  2dup r@ subcols 2v!
+    *  r> subcount ! ;
 
-: >subxy  ( n img -- x y )                                                    \ locate a subimg by index
+: >subxy  ( n img -- x y )   \ locate a subimg by index
     >r  pfloor  r@ subcols @  /mod  2pfloor  r> subw 2v@ 2* ;
 
-: afsubimg  ( n img -- ALLEGRO_BITMAP fx fy fw fh )                           \ helps with calling Allegro blit functions
+: afsubimg  ( n img -- ALLEGRO_BITMAP fx fy fw fh )   \ helps with calling Allegro blit functions
     >r  r@ bmp @  swap r@ >subxy 2af  r> fsubw 2v@ ;
 
 : imgsubbmp  ( n img -- subbmp )

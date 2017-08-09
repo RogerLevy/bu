@@ -1,4 +1,4 @@
-\ various words.  intended to be gleened a la carte.
+\ various words.  intended to be gleened a la carte manually.
 
 : smudge  ( - <word> )  \ disable a word from being searchable in the dictionary.
   defined if  >name 1 erase  else  drop  then ;
