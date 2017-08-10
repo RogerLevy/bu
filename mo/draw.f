@@ -68,15 +68,14 @@ fixed
 : csrblitf ( bmp sx sy ang flip )
     locals| flip ang sy sx bmp |
     bmp  color@af  bmp >center  at@  4af  sx sy ang 3af  flip  al_draw_tinted_scaled_rotated_bitmap  white ;
-: ublitf  ( bmp scale flip )
-    locals| flip scale bmp |
-    bmp  color@af  at@ bmp bmpwh scale dup 2* 4af  flip  al_draw_tinted_scaled_bitmap  white ;
 
 : blit   ( bmp ) 0 blitf ;
 : crblit  ( bmp ang )  0 crblitf ;
 : sblit  ( bmp dw dh )  0 sblitf ;
 : csrblit  ( bmp sx sy ang )  0 csrblitf ;
-: nublit  ( bmp sx sy )  0 dup csrblitf ;  \ what does n stand for???
+: nublitf  ( bmp sx sy flip )  0 swap csrblitf ;  \ nu stands for non-uniform
+: nublit  ( bmp sx sy )  0 dup csrblitf ;  
+: ublitf  ( bmp scale flip )  >r dup 0 r> csrblitf ;
 : ublit  ( bmp scale )  0 ublitf ;
 
 \ Text
