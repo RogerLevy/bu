@@ -64,7 +64,7 @@ fixed
     bmp  color@af  bmp >center  ang 3af  flip  al_draw_tinted_rotated_bitmap  white ;
 : sblitf  ( bmp dw dh flip )
     locals| flip dh dw |
-    ( bmp )  color@af  at@ dw dh 4af  flip  al_draw_tinted_scaled_bitmap white ;
+    ( bmp )  dup >r  color@af  0 0 r> bmpwh 4af  at@ dw dh 4af  flip  al_draw_tinted_scaled_bitmap white ;
 : csrblitf ( bmp sx sy ang flip )
     locals| flip ang sy sx bmp |
     bmp  color@af  bmp >center  at@  4af  sx sy ang 3af  flip  al_draw_tinted_scaled_rotated_bitmap  white ;
