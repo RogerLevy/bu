@@ -12,6 +12,7 @@ bu: idiom tilegame:
     import bu/mo/a
     import bu/mo/pen
     import bu/mo/draw
+    import bu/mo/array2d
 
 16384 dup constant maxtiles  cellstack tiles
 : tile  maxtiles 1 - and tiles [] @ ;
@@ -51,3 +52,10 @@ bu: idiom tilegame:
 : draw-tilemap  ( addr /pitch -- )  clipwh  unscaled  tbwh 2/  draw-tilemap-part ;
 
 : draw-tilemap-bg  ( addr /pitch -- )  clipwh  unscaled  tbwh 2/  1 1 2+  draw-tilemap-part ;
+
+: scroll  ( scrollx scrolly tilew tileh pen=xy -- col row pen=offsetted )
+    2over 2over 2mod 2negate +at   2/ 2pfloor ;
+
+: convert-tile   dup 2 << over $80000000 and 1 >> or swap $40000000 and 1 << or ;
+: convert-tilemap  ( col row #cols #rows array2d -- )
+    some2d> cells bounds do i @ convert-tile i ! cell +loop ;
