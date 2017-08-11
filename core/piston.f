@@ -18,7 +18,7 @@
 0 value lag  \ completed ticks
 0 value 'go
 0 value 'step
-0 value 'render
+0 value 'show
 
 \ Flags
 variable info  \ enables debugging mode display
@@ -94,18 +94,18 @@ variable newfs
 defer ?overlay  ' noop is ?overlay  \ render ide
 defer ?system   ' noop is ?system   \ system events
 
-: render  unmount  'render try to renderr  unmount  ?overlay  al_flip_display  0 to lag ;
+: show  unmount  'show try to renderr  unmount  ?overlay  al_flip_display  0 to lag ;
 : step  'step try to steperr ;
 private:
     : update?  timer? if  lag dup -exit drop  then  eventq al_is_event_queue_empty  lag 4 >= or ;
     : wait  eventq evt al_wait_for_event ;
-    : ?render  update? -exit  1 +to #frames  ?fs  render  ;
+    : ?show  update? -exit  1 +to #frames  ?fs  show  ;
     : ?step  etype ALLEGRO_EVENT_TIMER = if  1 +to lag   poll  step  then ;
-    : /ok  resetkb  -break  >display  +timer  render ;
+    : /ok  resetkb  -break  >display  +timer  show ;
     : ok/  eventq al_flush_event_queue -timer  >ide  -break ;
 public:
 
-: render>  r>  to 'render ;  ( -- <code> )  ( -- )
+: show>  r>  to 'show ;  ( -- <code> )  ( -- )
 : step>  r>  to 'step ;  ( -- <code> )  ( -- )
 : go>  r> to 'go   0 to 'step ;  ( -- <code> )  ( -- )
 
@@ -116,10 +116,10 @@ variable logevents
         wait
         begin
             logevents @ if  etype h.  then
-            std  ?system  'go try drop  ?step  ?render
+            std  ?system  'go try drop  ?step  ?show
             eventq evt al_get_next_event 0=  breaking? or
-        until  ?render  \ again for sans timer
+        until  ?show  \ again for sans timer
     breaking? until
     ok/ ;
 
-:noname  0 0 0.5 clear-to-color ; >code  to 'render
+:noname  0 0 0.5 clear-to-color ; >code  to 'show

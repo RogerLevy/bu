@@ -5,7 +5,7 @@
 
 \ go> words:
 \   REPL  ( -- )  processes commandline events.
-\ render> words:
+\ show> words:
 \   .CMDLINE  ( -- )  displays the commandline at given pen position and font, including the current idiom and the stack
 \   .OUTPUT  ( -- )  displays commandline output
 \ misc words:
