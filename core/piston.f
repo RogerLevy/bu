@@ -94,13 +94,12 @@ variable newfs
 defer ?overlay  ' noop is ?overlay  \ render ide
 defer ?system   ' noop is ?system   \ system events
 
-: render  unmount  'render try to renderr ;
+: render  unmount  'render try to renderr  unmount  ?overlay  al_flip_display  0 to lag ;
 : step  'step try to steperr ;
 private:
     : update?  timer? if  lag dup -exit drop  then  eventq al_is_event_queue_empty  lag 4 >= or ;
     : wait  eventq evt al_wait_for_event ;
-    : ?render  update? -exit  1 +to #frames  ?fs  render  unmount  ?overlay  al_flip_display
-        0 to lag ;
+    : ?render  update? -exit  1 +to #frames  ?fs  render  ;
     : ?step  etype ALLEGRO_EVENT_TIMER = if  1 +to lag   poll  step  then ;
     : /ok  resetkb  -break  >display  +timer  render ;
     : ok/  eventq al_flush_event_queue -timer  >ide  -break ;
