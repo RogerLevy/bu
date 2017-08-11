@@ -32,22 +32,24 @@ fixed
 : addr  ( col row array2d -- addr )
   (clamp) >r  r@ numcols @ * +  cells  r> data + ;
 
-: >stride  numcols @ cells ;
-: addr-stride  ( col row array2d -- addr /stride )  dup >r addr r> >stride ;
+: @pitch  ( array2d -- /pitch strid)  numcols @ cells ;
+: addr-pitch  ( col row array2d -- addr /pitch )  dup >r addr r> @pitch ;
 
 \ -----------------------------------------------------------------------------
 \ use the SRC and DEST "registers":
-: write2d  ( src-addr stride destcol destrow #cols #rows -- )
-  dest (clip)  2swap dest addr-stride  2swap  swap cells 2move ;
+: write2d  ( src-addr pitch destcol destrow #cols #rows -- )
+  dest (clip)  2swap dest addr-pitch  2swap  swap cells 2move ;
 
 : move2d  ( srcrow srccol destcol destrow #cols #rows -- )
-  2>r 2>r  src addr-stride  2r> 2r> write2d ;
+  2>r 2>r  src addr-pitch  2r> 2r> write2d ;
 \ -----------------------------------------------------------------------------
 
 : some2d  ( ... col row #cols #rows array2d XT -- ... )  ( ... addr #cells -- ... )
-  >r >r  r@ (clip)   2swap r> addr-stride
-  r> locals| xt stride src #rows #cols |
-  #rows 0 do  src #cols xt execute  stride +to src  loop ;
+  >r >r  r@ (clip)   2swap r> addr-pitch
+  r> locals| xt pitch src #rows #cols |
+  #rows 0 do  src #cols xt execute  pitch +to src  loop ;
+
+: some2d>  r> code> some2d ;
 
 :noname  third ifill ;
 : fill2d  ( val col row #cols #rows array2d -- )  literal some2d  drop ;
@@ -73,5 +75,4 @@ b count2d 10 ifill
 \ quit
 cr .( ARRAY2D tests passed. )
 dispose
-
 
