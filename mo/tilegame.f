@@ -39,7 +39,7 @@ bu: idiom tilegame:
 : tbwh  tba cell+ @ bmpwh ;
 
 : ?tile+  ?dup if  dup $0000fffc and tba + @  swap 28 >>  blitf  then  0 +at ;
-: (draw-tilemap)  ( addr /pitch cols rows -- )
+: draw-tilemap-part  ( addr /pitch cols rows -- )
     tbwh locals| th tw rows cols pitch |
     a@ >r
     rows for
@@ -48,6 +48,6 @@ bu: idiom tilegame:
         th + at   pitch +
     loop  drop  r> a! ;
 
-: draw-tilemap  ( addr /pitch -- )  clipwh  unscaled  tbwh 2/  (draw-tilemap) ;
+: draw-tilemap  ( addr /pitch -- )  clipwh  unscaled  tbwh 2/  draw-tilemap-part ;
 
-: draw-tilemap-bg  ( addr /pitch -- )  clipwh  unscaled  tbwh 2/  1 1 2+  (draw-tilemap) ;
+: draw-tilemap-bg  ( addr /pitch -- )  clipwh  unscaled  tbwh 2/  1 1 2+  draw-tilemap-part ;
