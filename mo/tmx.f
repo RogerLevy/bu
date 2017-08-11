@@ -52,7 +52,7 @@ create tmxdir  256 allot
 \ used with several node types:
 \ private:
     : @source  " source" attr$ ;
-    : @name    " name" attr$ ;
+    : @nameattr " name" attr$ ;
     : ?name    " name" ?attr$ ;
     : @w       " width" attr ;
     : @h       " height" attr ;
