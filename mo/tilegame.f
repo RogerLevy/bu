@@ -2,9 +2,6 @@
 \  Loading tiles, tile and tilemap display and collision routines
 \  Maximum 16384 tiles.
 
-\ TODO:
-\  [ ] - Tile collision
-\  [ ] - Render a flipped tilemap
 
 bu: idiom tilegame:
     import bu/mo/image
