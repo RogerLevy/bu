@@ -12,10 +12,13 @@ import bu/mo/cellstack
 private:
     get-order  dup cellstack Order  set-order
 public:
+
 : save-order  get-order s>p Order swap pushes ;
 : recall-order  order #pushed -exit  Order dup #pushed >r r@ pops  r> 1i set-order ;
+
 variable 'boot
 create buildname  256 allot
+
 private:
     : system  ( cr 2dup type ) zstring >process-wait ;
 

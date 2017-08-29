@@ -7,6 +7,5 @@ include bu/core/display          cr .( loaded basic display management    )
 include bu/core/input            cr .( loaded allegro input support words )
 include bu/core/gfx              cr .( loaded graphics tools              )
 include bu/core/piston           cr .( loaded the main loop               )
-import bu/core/build             cr .( loaded executable build tool       )
 include bu/core/blend            cr .( loaded blending words              )
 [defined] linux [if]  [else]  include bu/lib/win-clipboard.f  [then]
