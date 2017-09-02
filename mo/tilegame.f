@@ -52,7 +52,3 @@ bu: idiom tilegame:
 
 : scroll  ( scrollx scrolly tilew tileh pen=xy -- col row pen=offsetted )
     2over 2over 2mod 2negate +at   2/ 2pfloor ;
-
-: convert-tile   dup 2 << over $80000000 and 1 >> or swap $40000000 and 1 << or ;
-: convert-tilemap  ( col row #cols #rows array2d -- )
-    some2d> cells bounds do i @ convert-tile i ! cell +loop ;

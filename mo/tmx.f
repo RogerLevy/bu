@@ -109,9 +109,9 @@ public:
         then
     loop  0 ;
 : extract  ( layer dest pitch -- )  \ read out tilemap data. you'll probably need to process it.
-    third @wh locals| h w pitch dest |  ( layer )
+    third @wh locals| h w pitch dest |
     here >r
-        " data" 0 child  >text  b64, \ Base64, no compression!!!
+        ( layer ) " data" 0 child  >text  b64, \ Base64, no compression!!!
         r@  w cells  dest  pitch  h  w cells  2move
     r> reclaim ;
 : layers>  ( -- <code> )  ( layernode -- )
